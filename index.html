@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platinum Design</title>
+    <style>
+        /* --- CSS VARIABLES & RESET --- */
+        :root {
+            --bg-color: #1c1b19;
+            --accent-color: #ffaa00;
+            --text-white: #ffffff;
+            --text-gray: #d0d0d0;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --blur-amount: 15px;
+            --font-main: 'Helvetica Neue', 'Arial', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+            /* Генерация шума и золотого свечения (как на pd11.jpg) */
+            background: 
+                radial-gradient(circle at top right, rgba(255, 170, 0, 0.20), transparent 50%),
+                radial-gradient(circle at bottom left, rgba(255, 170, 0, 0.15), transparent 50%),
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.07'/%3E%3C/svg%3E"),
+                var(--bg-color);
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* --- LANGUAGE OVERLAY (стартовый экран) --- */
+        #lang-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+
+        #lang-overlay h2 {
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-white);
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--text-white);
+            padding: 15px 30px;
+            margin: 10px;
+            width: 200px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .lang-btn:hover {
+            background: var(--accent-color);
+            color: #000;
+            border-color: var(--accent-color);
+            transform: scale(1.05);
+        }
+
+        /* --- HEADER (GLASS) --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 90px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000; /* Очень высокий индекс, чтобы быть выше всего */
+            
+            /* Эффект стекла */
+            background: rgba(28, 27, 25, 0.4);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo-container img {
+            height: 60px; /* Размер логотипа */
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px rgba(0,0,0,0.5));
+            transition: transform 0.3s;
+        }
+        .logo-container img:hover {
+            transform: scale(1.02);
+        }
+
+        /* --- BURGER MENU / CROSS --- */
+        .burger-menu {
+            width: 35px;
+            height: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            z-index: 2000; /* Выше чем шторка (1500) */
+            position: relative;
+        }
+
+        .burger-line {
+            width: 100%;
+            height: 3px;
+            background-color: var(--text-white);
+            border-radius: 2px;
+            transition: all 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+        }
+
+        /* Анимация превращения в крестик */
+        .burger-menu.active .burger-line:nth-child(1) {
+            transform: translateY(10px) rotate(45deg);
+            background-color: var(--accent-color); /* Крестик станет оранжевым */
+        }
+        .burger-menu.active .burger-line:nth-child(2) {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        .burger-menu.active .burger-line:nth-child(3) {
+            transform: translateY(-11px) rotate(-45deg);
+            background-color: var(--accent-color);
+        }
+
+        /* --- MENU CURTAIN (ШТОРКА) --- */
+        .menu-curtain {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%; /* На мобильных на весь экран */
+            height: 100vh;
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            transform: translateX(100%);
+            transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+            z-index: 1500; /* Ниже бургера, но выше контента */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-left: 1px solid var(--glass-border);
+        }
+
+        @media (min-width: 768px) {
+            .menu-curtain {
+                width: 400px; /* На ПК шторка сбоку */
+            }
+        }
+
+        .menu-curtain.active {
+            transform: translateX(0);
+        }
+
+        /* Кнопки языка внутри шторки (рядом с крестиком) */
+        .menu-header-controls {
+            position: absolute;
+            top: 32px; /* Выравнивание по высоте с бургером */
+            right: 80px; /* Отступ слева от бургера */
+            display: flex;
+            gap: 8px;
+        }
+
+        .mini-lang-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            color: #aaa;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .mini-lang-btn:hover {
+            border-color: var(--accent-color);
+            color: var(--text-white);
+        }
+
+        .mini-lang-btn.active {
+            background: var(--accent-color);
+            color: #1c1b19;
+            border-color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .menu-links {
+            text-align: center;
+            width: 100%;
+        }
+
+        .menu-links li {
+            margin: 20px 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .menu-links a {
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: var(--text-white);
+            position: relative;
+            padding: 10px 0;
+            display: inline-block;
+        }
+
+        .menu-links a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Задержка появления пунктов меню */
+        .menu-curtain.active .menu-links li:nth-child(1) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+        .menu-curtain.active .menu-links li:nth-child(2) { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
+        .menu-curtain.active .menu-links li:nth-child(3) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
+        .menu-curtain.active .menu-links li:nth-child(4) { transition-delay: 0.5s; opacity: 1; transform: translateY(0); }
+
+        /* --- MAIN CONTENT --- */
+        main {
+            padding: 140px 20px 60px;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .hero-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 50px;
+            color: var(--text-white); /* Светлый цвет текста как просили */
+            min-height: 3rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+
+        .content-text {
+            text-align: left;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--text-gray);
+            margin-bottom: 50px;
+            white-space: pre-wrap;
+            min-height: 200px;
+        }
+        
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1.2em;
+            background-color: var(--accent-color);
+            vertical-align: middle;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* --- BUTTON --- */
+        .cta-button {
+            display: inline-block;
+            padding: 18px 50px;
+            background: var(--accent-color);
+            color: #1c1b19;
+            font-weight: 800;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            box-shadow: 0 0 20px rgba(255, 170, 0, 0.2);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0; /* Скрыта до конца печати текста */
+            transform: translateY(20px);
+        }
+
+        .cta-button.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 170, 0, 0.4);
+            background: #ffb733;
+        }
+
+        /* --- ADAPTIVE --- */
+        @media (min-width: 768px) {
+            .hero-title { font-size: 3rem; }
+            .content-text { font-size: 1.15rem; padding: 0 50px; text-align: justify; }
+        }
+        
+        @media (max-width: 480px) {
+             .menu-header-controls { right: 60px; }
+             .mini-lang-btn { padding: 4px 8px; font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="lang-overlay">
+        <h2>Select Language</h2>
+        <button class="lang-btn" onclick="setLanguage('en')">🇺🇸 English</button>
+        <button class="lang-btn" onclick="setLanguage('ru')">🇷🇺 Русский</button>
+        <button class="lang-btn" onclick="setLanguage('az')">🇦🇿 Azərbaycan</button>
+    </div>
+
+    <header>
+        <div class="logo-container">
+            <img src="pd222.jpg" alt="Platinum Design Logo">
+        </div>
+        
+        <div class="burger-menu" id="burger">
+            <div class="burger-line"></div>
+            <div class="burger-line"></div>
+            <div class="burger-line"></div>
+        </div>
+    </header>
+
+    <div class="menu-curtain" id="menuCurtain">
+        <div class="menu-header-controls">
+            <button class="mini-lang-btn" id="btn-ru" onclick="switchLangInside('ru')">RU</button>
+            <button class="mini-lang-btn" id="btn-en" onclick="switchLangInside('en')">ENG</button>
+            <button class="mini-lang-btn" id="btn-az" onclick="switchLangInside('az')">AZ</button>
+        </div>
+        
+        <ul class="menu-links">
+            <li><a href="#" onclick="closeMenu()" id="link-home">Главная страница</a></li>
+            <li><a href="https://t.me/PlatinumDsgn" target="_blank" id="link-store">Перейти в магазин</a></li>
+            <li><a href="https://www.tiktok.com/@wirilgun1e1?_r=1&_t=ZS-92bJlTjGfQe" target="_blank">TikTok</a></li>
+            <li><a href="#" id="link-insta">Instagram</a></li>
+        </ul>
+    </div>
+
+    <main id="main-content">
+        <h1 class="hero-title"><span id="typewriter-headline"></span></h1>
+        
+        <div class="content-text"><span id="typewriter-body"></span><span class="cursor">|</span></div>
+
+        <a href="https://t.me/PlatinumDsgn" target="_blank" class="cta-button" id="cta-btn">Перейти в магазин</a>
+    </main>
+
+    <script>
+        // --- ДАННЫЕ И ПЕРЕВОДЫ ---
+        const contentData = {
+            ru: {
+                headline: "Platinum Design — больше чем просто графика",
+                body: `Platinum Design — это онлайн-магазин, где создают уникальный дизайн специально для каждого человека. Здесь нет готовых шаблонов и случайных картинок — каждая работа разрабатывается с нуля под ваши идеи, пожелания и стиль. Мы делаем так, чтобы всё выглядело красиво, аккуратно и современно.
+
+В нашем магазине можно заказать дизайн любой сложности и тематики. Независимо от того, нужен ли вам яркий и броский визуальный образ или спокойный и минималистичный стиль, каждая работа делается с вниманием к деталям: цвету, форме и композиции.
+
+Главная идея Platinum Design — делать визуальное красивым и продуманным. Здесь нет ничего лишнего, только аккуратная, целостная и современная работа, созданная специально для вас. Мы создаём дизайн, который радует глаз и помогает выражать ваши идеи.`,
+                cta: "Перейти в магазин",
+                menu_home: "Главная страница",
+                menu_store: "Перейти в магазин"
+            },
+            en: {
+                headline: "Platinum Design — More than just graphics",
+                body: `Platinum Design is an online store creating unique designs tailored specifically for each individual. There are no ready-made templates or random images here — every piece of work is developed from scratch based on your ideas, wishes, and style. We ensure everything looks beautiful, neat, and modern.
+
+In our store, you can order designs of any complexity and theme. Whether you need a bright and catchy visual image or a calm and minimalist style, every job is done with attention to detail: color, shape, and composition.
+
+The main idea of Platinum Design is to make visuals beautiful and thoughtful. There is nothing superfluous here, only neat, holistic, and modern work created especially for you. We create designs that delight the eye and help express your ideas.`,
+                cta: "Go to Store",
+                menu_home: "Home Page",
+                menu_store: "Go to Store"
+            },
+            az: {
+                headline: "Platinum Design — Qrafikadan daha artıq",
+                body: `Platinum Design — hər bir insan üçün xüsusi olaraq unikal dizayn yaradılan onlayn mağazadır. Burada hazır şablonlar və təsadüfi şəkillər yoxdur — hər bir iş sizin ideyalarınız, istəkləriniz və üslubunuza uyğun olaraq sıfırdan hazırlanır. Biz hər şeyin gözəl, səliqəli və müasir görünməsini təmin edirik.
+
+Mağazamızda istənilən çətinlikdə və mövzuda dizayn sifariş edə bilərsiniz. İstər parlaq və diqqətçəkən vizual obraz, istərsə də sakit və minimalist üslub lazım olsun, hər bir iş detallara — rəngə, formaya və kompozisiyaya diqqət yetirilərək hazırlanır.
+
+Platinum Design-ın əsas ideyası vizuallığı gözəl və düşünülmüş etməkdir. Burada artıq heç nə yoxdur, yalnız sizin üçün xüsusi olaraq yaradılmış səliqəli, bütöv və müasir iş var. Biz gözü oxşayan və ideyaları ifadə etməyə kömək edən dizayn yaradırıq.`,
+                cta: "Mağazaya keçid",
+                menu_home: "Ana səhifə",
+                menu_store: "Mağazaya keçid"
+            }
+        };
+
+        let currentLang = 'ru';
+        let headlineTimeout;
+        let bodyTimeout;
+
+        // Элементы
+        const overlay = document.getElementById('lang-overlay');
+        const mainContent = document.getElementById('main-content');
+        const headlineEl = document.getElementById('typewriter-headline');
+        const bodyEl = document.getElementById('typewriter-body');
+        const ctaBtn = document.getElementById('cta-btn');
+        const burger = document.getElementById('burger');
+        const menuCurtain = document.getElementById('menuCurtain');
+        const linkHome = document.getElementById('link-home');
+        const linkStore = document.getElementById('link-store');
+
+        // --- ЛОГИКА ---
+
+        // 1. Установка языка при входе
+        function setLanguage(lang) {
+            currentLang = lang;
+            
+            // Скрыть заставку
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                mainContent.style.opacity = '1';
+                startTypewriterEffect(); // Запуск печати
+            }, 500);
+
+            updateInterfaceText();
+            updateActiveMiniLang(lang);
+        }
+
+        // 2. Смена языка из меню
+        function switchLangInside(lang) {
+            if (lang === currentLang) return;
+            currentLang = lang;
+            updateInterfaceText();
+            updateActiveMiniLang(lang);
+            
+            // Перезапуск эффекта печати
+            startTypewriterEffect();
+        }
+
+        function updateActiveMiniLang(lang) {
+            document.querySelectorAll('.mini-lang-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-${lang}`).classList.add('active');
+        }
+
+        // 3. Обновление статичного текста (кнопки меню и футера)
+        function updateInterfaceText() {
+            const data = contentData[currentLang];
+            ctaBtn.innerText = data.cta;
+            linkHome.innerText = data.menu_home;
+            linkStore.innerText = data.menu_store;
+        }
+
+        // 4. Эффект печатной машинки (для заголовка И текста)
+        function startTypewriterEffect() {
+            const data = contentData[currentLang];
+            
+            // Сброс предыдущих таймеров
+            clearTimeout(headlineTimeout);
+            clearTimeout(bodyTimeout);
+            
+            headlineEl.innerHTML = "";
+            bodyEl.innerHTML = "";
+            ctaBtn.classList.remove('visible');
+
+            // Печать заголовка
+            let i = 0;
+            function typeHeadline() {
+                if (i < data.headline.length) {
+                    headlineEl.innerHTML += data.headline.charAt(i);
+                    i++;
+                    headlineTimeout = setTimeout(typeHeadline, 40); // Скорость заголовка
+                } else {
+                    // Когда заголовок готов, начинаем текст
+                    setTimeout(() => startBodyTypewriter(data.body), 300);
+                }
+            }
+            typeHeadline();
+        }
+
+        function startBodyTypewriter(text) {
+            let j = 0;
+            const speed = 10; // Скорость основного текста (быстрее)
+
+            function typeBody() {
+                if (j < text.length) {
+                    bodyEl.innerHTML += text.charAt(j);
+                    j++;
+                    // Пропускаем задержку для пробелов, чтобы печатало ритмичнее
+                    let delay = (text.charAt(j) === ' ') ? 0 : speed;
+                    bodyTimeout = setTimeout(typeBody, delay);
+                } else {
+                    // Текст готов - показываем кнопку
+                    ctaBtn.classList.add('visible');
+                }
+            }
+            typeBody();
+        }
+
+        // 5. Управление Меню
+        // Нажимаем на бургер -> Он превращается в крестик (CSS) -> Открывается меню
+        // Нажимаем на тот же элемент (уже крестик) -> Меню закрывается
+        burger.addEventListener('click', () => {
+            burger.classList.toggle('active');
+            menuCurtain.classList.toggle('active');
+        });
+
+        // Функция закрытия при клике на ссылку
+        function closeMenu() {
+            burger.classList.remove('active');
+            menuCurtain.classList.remove('active');
+        }
+
+        // Инициализация
+        updateActiveMiniLang('ru');
+
+    </script>
+</body>
+</html>
