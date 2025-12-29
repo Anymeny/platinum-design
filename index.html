@@ -9,12 +9,15 @@
         :root {
             --bg-color: #1c1b19;
             --accent-color: #ffaa00;
+            /* Добавляем полупрозрачный акцент для мягких эффектов */
+            --accent-soft: rgba(255, 170, 0, 0.25);
             --text-white: #ffffff;
             --text-gray: #d0d0d0;
             --glass-bg: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.1);
-            --blur-amount: 15px;
+            --blur-amount: 20px;
             --font-main: 'Helvetica Neue', 'Arial', sans-serif;
+            --ease-smooth: cubic-bezier(0.25, 0.8, 0.25, 1); /* Плавная анимация */
         }
 
         * {
@@ -29,18 +32,18 @@
             font-family: var(--font-main);
             overflow-x: hidden;
             min-height: 100vh;
-            /* Генерация шума и золотого свечения (как на pd11.jpg) */
             background: 
-                radial-gradient(circle at top right, rgba(255, 170, 0, 0.20), transparent 50%),
-                radial-gradient(circle at bottom left, rgba(255, 170, 0, 0.15), transparent 50%),
-                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.07'/%3E%3C/svg%3E"),
+                radial-gradient(circle at top right, rgba(255, 170, 0, 0.15), transparent 60%),
+                radial-gradient(circle at bottom left, rgba(255, 170, 0, 0.10), transparent 60%),
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E"),
                 var(--bg-color);
         }
 
-        a { text-decoration: none; color: inherit; }
+        a { text-decoration: none; color: inherit; cursor: pointer; }
         ul { list-style: none; }
+        button { cursor: pointer; }
 
-        /* --- LANGUAGE OVERLAY (стартовый экран) --- */
+        /* --- START SCREEN (LANGUAGE) --- */
         #lang-overlay {
             position: fixed;
             top: 0;
@@ -53,115 +56,122 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.6s var(--ease-smooth);
         }
 
         #lang-overlay h2 {
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             font-size: 1.5rem;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             text-transform: uppercase;
             color: var(--text-white);
+            font-weight: 300;
         }
 
         .lang-btn {
-            background: transparent;
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--glass-border);
             color: var(--text-white);
-            padding: 15px 30px;
-            margin: 10px;
-            width: 200px;
-            border-radius: 30px;
+            padding: 18px 40px;
+            margin: 12px;
+            width: 220px;
+            border-radius: 50px;
             font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
+            font-weight: 500;
+            transition: all 0.4s var(--ease-smooth);
+            backdrop-filter: blur(10px);
         }
 
+        /* Более мягкий ховер для стартовых кнопок */
         .lang-btn:hover {
-            background: var(--accent-color);
-            color: #000;
+            background: var(--accent-soft);
             border-color: var(--accent-color);
-            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(255, 170, 0, 0.3);
+            transform: scale(1.03);
         }
 
-        /* --- HEADER (GLASS) --- */
+        /* --- HEADER --- */
         header {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 90px;
+            height: 100px; /* Увеличили высоту хедера */
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 20px;
-            z-index: 1000; /* Очень высокий индекс, чтобы быть выше всего */
-            
-            /* Эффект стекла */
-            background: rgba(28, 27, 25, 0.4);
+            padding: 0 25px;
+            z-index: 1000;
+            background: rgba(28, 27, 25, 0.5);
             backdrop-filter: blur(var(--blur-amount));
             -webkit-backdrop-filter: blur(var(--blur-amount));
-            border-bottom: 1px solid var(--glass-border);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .logo-container img {
-            height: 60px; /* Размер логотипа */
+            height: 75px; /* УВЕЛИЧЕН ЛОГОТИП */
             object-fit: contain;
-            filter: drop-shadow(0 0 8px rgba(0,0,0,0.5));
-            transition: transform 0.3s;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
+            transition: transform 0.4s var(--ease-smooth);
         }
+        
         .logo-container img:hover {
             transform: scale(1.02);
         }
 
-        /* --- BURGER MENU / CROSS --- */
+        /* --- BURGER MENU (FIXED) --- */
         .burger-menu {
+            position: fixed;
+            top: 38px; /* Отцентровано по новой высоте хедера (100-24)/2 */
+            right: 25px;
             width: 35px;
             height: 24px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            cursor: pointer;
-            z-index: 2000; /* Выше чем шторка (1500) */
-            position: relative;
+            z-index: 3000;
+            transition: transform 0.3s ease;
         }
+        .burger-menu:hover { opacity: 0.8; }
 
         .burger-line {
             width: 100%;
-            height: 3px;
+            height: 2px;
             background-color: var(--text-white);
-            border-radius: 2px;
-            transition: all 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+            border-radius: 4px;
+            transition: all 0.5s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+            transform-origin: center;
         }
 
-        /* Анимация превращения в крестик */
+        /* Крестик - мягче цвет */
         .burger-menu.active .burger-line:nth-child(1) {
-            transform: translateY(10px) rotate(45deg);
-            background-color: var(--accent-color); /* Крестик станет оранжевым */
+            transform: translateY(11px) rotate(45deg);
+            background-color: var(--accent-color);
+            box-shadow: 0 0 10px var(--accent-color);
         }
         .burger-menu.active .burger-line:nth-child(2) {
             opacity: 0;
-            transform: translateX(-20px);
+            transform: translateX(-15px);
         }
         .burger-menu.active .burger-line:nth-child(3) {
             transform: translateY(-11px) rotate(-45deg);
             background-color: var(--accent-color);
+            box-shadow: 0 0 10px var(--accent-color);
         }
 
-        /* --- MENU CURTAIN (ШТОРКА) --- */
+        /* --- MENU CURTAIN --- */
         .menu-curtain {
             position: fixed;
             top: 0;
             right: 0;
-            width: 100%; /* На мобильных на весь экран */
+            width: 100%;
             height: 100vh;
-            background: rgba(20, 20, 20, 0.95);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+            background: rgba(20, 20, 20, 0.96);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
             transform: translateX(100%);
-            transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
-            z-index: 1500; /* Ниже бургера, но выше контента */
+            transition: transform 0.6s var(--ease-smooth);
+            z-index: 2000;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -170,45 +180,47 @@
         }
 
         @media (min-width: 768px) {
-            .menu-curtain {
-                width: 400px; /* На ПК шторка сбоку */
-            }
+            .menu-curtain { width: 450px; }
         }
 
         .menu-curtain.active {
             transform: translateX(0);
         }
 
-        /* Кнопки языка внутри шторки (рядом с крестиком) */
+        /* Controls inside menu */
         .menu-header-controls {
             position: absolute;
-            top: 32px; /* Выравнивание по высоте с бургером */
-            right: 80px; /* Отступ слева от бургера */
+            top: 35px;
+            right: 80px;
             display: flex;
-            gap: 8px;
+            gap: 10px;
+            z-index: 2001;
         }
 
         .mini-lang-btn {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.02);
             border: 1px solid var(--glass-border);
-            color: #aaa;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: 0.3s;
+            color: #888;
+            padding: 8px 14px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
         
+        /* Мягкий ховер для мини-кнопок */
         .mini-lang-btn:hover {
             border-color: var(--accent-color);
             color: var(--text-white);
+            background: var(--accent-soft);
         }
 
         .mini-lang-btn.active {
             background: var(--accent-color);
             color: #1c1b19;
             border-color: var(--accent-color);
-            font-weight: bold;
+            font-weight: 700;
+            box-shadow: 0 0 15px var(--accent-soft);
         }
 
         .menu-links {
@@ -217,50 +229,51 @@
         }
 
         .menu-links li {
-            margin: 20px 0;
+            margin: 30px 0;
             opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease;
+            transform: translateY(30px);
+            transition: all 0.6s var(--ease-smooth);
         }
 
         .menu-links a {
-            font-size: 1.6rem;
-            font-weight: 500;
+            font-size: 1.8rem;
+            font-weight: 300;
             color: var(--text-white);
-            position: relative;
-            padding: 10px 0;
             display: inline-block;
+            transition: color 0.3s, transform 0.3s;
         }
 
         .menu-links a:hover {
             color: var(--accent-color);
+            transform: translateX(5px);
+            text-shadow: 0 0 10px var(--accent-soft);
         }
 
-        /* Задержка появления пунктов меню */
+        /* Animation delays */
         .menu-curtain.active .menu-links li:nth-child(1) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
         .menu-curtain.active .menu-links li:nth-child(2) { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
         .menu-curtain.active .menu-links li:nth-child(3) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
-        .menu-curtain.active .menu-links li:nth-child(4) { transition-delay: 0.5s; opacity: 1; transform: translateY(0); }
 
         /* --- MAIN CONTENT --- */
         main {
-            padding: 140px 20px 60px;
+            padding: 150px 20px 80px;
             max-width: 900px;
             margin: 0 auto;
             text-align: center;
             opacity: 0;
-            transition: opacity 1s ease;
+            transition: opacity 1.2s ease;
         }
 
         .hero-title {
-            font-size: 2.2rem;
+            font-size: 1.7rem;
             font-weight: 800;
-            margin-bottom: 50px;
-            color: var(--text-white); /* Светлый цвет текста как просили */
+            margin-bottom: 45px;
+            color: var(--text-white);
             min-height: 3rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+            line-height: 1.4;
+            text-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
         }
 
         .content-text {
@@ -268,18 +281,19 @@
             font-size: 1.05rem;
             line-height: 1.8;
             color: var(--text-gray);
-            margin-bottom: 50px;
+            margin-bottom: 60px;
             white-space: pre-wrap;
-            min-height: 200px;
         }
         
         .cursor {
             display: inline-block;
-            width: 3px;
+            width: 2px;
             height: 1.2em;
             background-color: var(--accent-color);
-            vertical-align: middle;
+            vertical-align: text-bottom;
             animation: blink 1s infinite;
+            margin-left: 2px;
+            box-shadow: 0 0 8px var(--accent-color);
         }
 
         @keyframes blink {
@@ -287,21 +301,25 @@
             50% { opacity: 0; }
         }
 
-        /* --- BUTTON --- */
+        /* --- MAIN CTA BUTTON (Гармоничный стиль) --- */
         .cta-button {
             display: inline-block;
-            padding: 18px 50px;
+            padding: 20px 55px;
             background: var(--accent-color);
             color: #1c1b19;
-            font-weight: 800;
-            font-size: 1.1rem;
+            font-weight: 700;
+            font-size: 1rem;
             border-radius: 50px;
-            box-shadow: 0 0 20px rgba(255, 170, 0, 0.2);
-            transition: all 0.3s ease;
+            /* Более мягкая тень изначально */
+            box-shadow: 0 10px 30px -10px rgba(255, 170, 0, 0.5);
+            transition: all 0.4s var(--ease-smooth);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0; /* Скрыта до конца печати текста */
-            transform: translateY(20px);
+            letter-spacing: 1.5px;
+            opacity: 0;
+            transform: translateY(30px);
+            border: none;
+            position: relative;
+            overflow: hidden;
         }
 
         .cta-button.visible {
@@ -309,21 +327,27 @@
             transform: translateY(0);
         }
 
+        /* Плавный, не резкий ховер */
         .cta-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(255, 170, 0, 0.4);
-            background: #ffb733;
+            transform: translateY(-4px) scale(1.02);
+            /* Усиливаем тень и делаем кнопку чуть ярче, а не меняем цвет */
+            box-shadow: 0 20px 40px -10px rgba(255, 170, 0, 0.7);
+            filter: brightness(1.1); 
         }
+        
+        .cta-button:active {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px -5px rgba(255, 170, 0, 0.7);
+        }
+
 
         /* --- ADAPTIVE --- */
         @media (min-width: 768px) {
-            .hero-title { font-size: 3rem; }
-            .content-text { font-size: 1.15rem; padding: 0 50px; text-align: justify; }
-        }
-        
-        @media (max-width: 480px) {
-             .menu-header-controls { right: 60px; }
-             .mini-lang-btn { padding: 4px 8px; font-size: 0.75rem; }
+            .hero-title { font-size: 3.2rem; margin-bottom: 60px; letter-spacing: 2px; }
+            .content-text { font-size: 1.2rem; padding: 0 60px; text-align: justify; }
+            .burger-menu { right: 40px; }
+            .menu-header-controls { right: 100px; top: 38px; }
+            header { padding: 0 40px; }
         }
     </style>
 </head>
@@ -340,13 +364,13 @@
         <div class="logo-container">
             <img src="pd222.jpg" alt="Platinum Design Logo">
         </div>
-        
-        <div class="burger-menu" id="burger">
-            <div class="burger-line"></div>
-            <div class="burger-line"></div>
-            <div class="burger-line"></div>
-        </div>
     </header>
+
+    <div class="burger-menu" id="burger">
+        <div class="burger-line"></div>
+        <div class="burger-line"></div>
+        <div class="burger-line"></div>
+    </div>
 
     <div class="menu-curtain" id="menuCurtain">
         <div class="menu-header-controls">
@@ -356,7 +380,6 @@
         </div>
         
         <ul class="menu-links">
-            <li><a href="#" onclick="closeMenu()" id="link-home">Главная страница</a></li>
             <li><a href="https://t.me/PlatinumDsgn" target="_blank" id="link-store">Перейти в магазин</a></li>
             <li><a href="https://www.tiktok.com/@wirilgun1e1?_r=1&_t=ZS-92bJlTjGfQe" target="_blank">TikTok</a></li>
             <li><a href="#" id="link-insta">Instagram</a></li>
@@ -365,55 +388,38 @@
 
     <main id="main-content">
         <h1 class="hero-title"><span id="typewriter-headline"></span></h1>
-        
-        <div class="content-text"><span id="typewriter-body"></span><span class="cursor">|</span></div>
-
+        <div class="content-text"><span id="typewriter-body"></span><span class="cursor"></span></div>
         <a href="https://t.me/PlatinumDsgn" target="_blank" class="cta-button" id="cta-btn">Перейти в магазин</a>
     </main>
 
     <script>
-        // --- ДАННЫЕ И ПЕРЕВОДЫ ---
+        // --- ДАННЫЕ (Теперь с ПОЛНЫМ текстом) ---
         const contentData = {
             ru: {
                 headline: "Platinum Design — больше чем просто графика",
-                body: `Platinum Design — это онлайн-магазин, где создают уникальный дизайн специально для каждого человека. Здесь нет готовых шаблонов и случайных картинок — каждая работа разрабатывается с нуля под ваши идеи, пожелания и стиль. Мы делаем так, чтобы всё выглядело красиво, аккуратно и современно.
-
-В нашем магазине можно заказать дизайн любой сложности и тематики. Независимо от того, нужен ли вам яркий и броский визуальный образ или спокойный и минималистичный стиль, каждая работа делается с вниманием к деталям: цвету, форме и композиции.
-
-Главная идея Platinum Design — делать визуальное красивым и продуманным. Здесь нет ничего лишнего, только аккуратная, целостная и современная работа, созданная специально для вас. Мы создаём дизайн, который радует глаз и помогает выражать ваши идеи.`,
+                body: `Platinum Design — это онлайн-магазин, где создают уникальный дизайн специально для каждого человека. Здесь нет готовых шаблонов и случайных картинок — каждая работа разрабатывается с нуля под ваши идеи, пожелания и стиль. Мы делаем так, чтобы всё выглядело красиво, аккуратно и современно, чтобы каждый элемент гармонировал с остальными и создавал цельный, приятный для глаз образ.\n\nВ нашем магазине можно заказать дизайн любой сложности и тематики. Независимо от того, нужен ли вам яркий и броский визуальный образ или спокойный и минималистичный стиль, каждая работа делается с вниманием к деталям: цвету, форме, композиции и общей эстетике. Мы стараемся, чтобы дизайн был понятным и лёгким для восприятия, чтобы он создавал нужное настроение и впечатление.\n\nГлавная идея Platinum Design — делать визуальное красивым и продуманным. Здесь нет ничего лишнего, только аккуратная, целостная и современная работа, созданная специально для вас. Мы учитываем все пожелания и особенности, чтобы результат точно соответствовал вашим ожиданиям и вы могли видеть именно то, что хотели.\n\nМы создаём дизайн, который радует глаз, помогает выражать идеи и делает всё, что связано с визуальной эстетикой, аккуратным, современным и привлекательным.`,
                 cta: "Перейти в магазин",
-                menu_home: "Главная страница",
                 menu_store: "Перейти в магазин"
             },
             en: {
                 headline: "Platinum Design — More than just graphics",
-                body: `Platinum Design is an online store creating unique designs tailored specifically for each individual. There are no ready-made templates or random images here — every piece of work is developed from scratch based on your ideas, wishes, and style. We ensure everything looks beautiful, neat, and modern.
-
-In our store, you can order designs of any complexity and theme. Whether you need a bright and catchy visual image or a calm and minimalist style, every job is done with attention to detail: color, shape, and composition.
-
-The main idea of Platinum Design is to make visuals beautiful and thoughtful. There is nothing superfluous here, only neat, holistic, and modern work created especially for you. We create designs that delight the eye and help express your ideas.`,
+                // Полный перевод на английский
+                body: `Platinum Design is an online store where unique designs are created specifically for each person. There are no ready-made templates or random pictures here — every work is developed from scratch based on your ideas, wishes, and style. We ensure everything looks beautiful, neat, and modern, so that every element harmonizes with the others and creates a complete, visually pleasing image.\n\nIn our store, you can order designs of any complexity and theme. Regardless of whether you need a bright and catchy visual image or a calm and minimalist style, every work is done with attention to details: color, shape, composition, and general aesthetics. We try to make the design understandable and easy to perceive, so that it creates the right mood and impression.\n\nThe main idea of Platinum Design is to make the visual beautiful and thoughtful. There is nothing superfluous here, only neat, holistic, and modern work created especially for you. We take into account all wishes and features so that the result exactly meets your expectations and you can see exactly what you wanted.\n\nWe create a design that delights the eye, helps express ideas, and makes everything related to visual aesthetics neat, modern, and attractive.`,
                 cta: "Go to Store",
-                menu_home: "Home Page",
                 menu_store: "Go to Store"
             },
             az: {
                 headline: "Platinum Design — Qrafikadan daha artıq",
-                body: `Platinum Design — hər bir insan üçün xüsusi olaraq unikal dizayn yaradılan onlayn mağazadır. Burada hazır şablonlar və təsadüfi şəkillər yoxdur — hər bir iş sizin ideyalarınız, istəkləriniz və üslubunuza uyğun olaraq sıfırdan hazırlanır. Biz hər şeyin gözəl, səliqəli və müasir görünməsini təmin edirik.
-
-Mağazamızda istənilən çətinlikdə və mövzuda dizayn sifariş edə bilərsiniz. İstər parlaq və diqqətçəkən vizual obraz, istərsə də sakit və minimalist üslub lazım olsun, hər bir iş detallara — rəngə, formaya və kompozisiyaya diqqət yetirilərək hazırlanır.
-
-Platinum Design-ın əsas ideyası vizuallığı gözəl və düşünülmüş etməkdir. Burada artıq heç nə yoxdur, yalnız sizin üçün xüsusi olaraq yaradılmış səliqəli, bütöv və müasir iş var. Biz gözü oxşayan və ideyaları ifadə etməyə kömək edən dizayn yaradırıq.`,
+                 // Полный перевод на азербайджанский
+                body: `Platinum Design — hər bir insan üçün xüsusi olaraq unikal dizayn yaradılan onlayn mağazadır. Burada hazır şablonlar və təsadüfi şəkillər yoxdur — hər bir iş sizin ideyalarınız, istəkləriniz və üslubunuza uyğun olaraq sıfırdan hazırlanır. Biz hər şeyin gözəl, səliqəli və müasir görünməsini təmin edirik ki, hər bir element digərləri ilə ahəngdar olsun və bütöv, göz oxşayan bir görüntü yaratsın.\n\nMağazamızda istənilən çətinlikdə və mövzuda dizayn sifariş edə bilərsiniz. İstər parlaq və diqqətçəkən vizual obraz, istərsə də sakit və minimalist üslub lazım olsun, hər bir iş detallara — rəngə, formaya, kompozisiyaya və ümumi estetikaya diqqət yetirilərək hazırlanır. Biz çalışırıq ki, dizayn anlaşılan və qavranılması asan olsun, lazımi əhval-ruhiyə və təəssürat yaratsın.\n\nPlatinum Design-ın əsas ideyası vizuallığı gözəl və düşünülmüş etməkdir. Burada artıq heç nə yoxdur, yalnız sizin üçün xüsusi olaraq yaradılmış səliqəli, bütöv və müasir iş var. Nəticənin gözləntilərinizə tam uyğun olması üçün bütün istəklərinizi və xüsusiyyətləri nəzərə alırıq ki, məhz istədiyinizi görə biləsiniz.\n\nBiz gözü oxşayan, ideyaları ifadə etməyə kömək edən və vizual estetika ilə bağlı hər şeyi səliqəli, müasir və cəlbedici edən dizayn yaradırıq.`,
                 cta: "Mağazaya keçid",
-                menu_home: "Ana səhifə",
                 menu_store: "Mağazaya keçid"
             }
         };
 
         let currentLang = 'ru';
-        let headlineTimeout;
-        let bodyTimeout;
+        let headlineTimeout, bodyTimeout;
 
-        // Элементы
         const overlay = document.getElementById('lang-overlay');
         const mainContent = document.getElementById('main-content');
         const headlineEl = document.getElementById('typewriter-headline');
@@ -421,35 +427,26 @@ Platinum Design-ın əsas ideyası vizuallığı gözəl və düşünülmüş et
         const ctaBtn = document.getElementById('cta-btn');
         const burger = document.getElementById('burger');
         const menuCurtain = document.getElementById('menuCurtain');
-        const linkHome = document.getElementById('link-home');
         const linkStore = document.getElementById('link-store');
 
         // --- ЛОГИКА ---
-
-        // 1. Установка языка при входе
         function setLanguage(lang) {
             currentLang = lang;
-            
-            // Скрыть заставку
             overlay.style.opacity = '0';
             setTimeout(() => {
                 overlay.style.display = 'none';
                 mainContent.style.opacity = '1';
-                startTypewriterEffect(); // Запуск печати
-            }, 500);
-
+                startTypewriterEffect();
+            }, 600);
             updateInterfaceText();
             updateActiveMiniLang(lang);
         }
 
-        // 2. Смена языка из меню
         function switchLangInside(lang) {
             if (lang === currentLang) return;
             currentLang = lang;
             updateInterfaceText();
             updateActiveMiniLang(lang);
-            
-            // Перезапуск эффекта печати
             startTypewriterEffect();
         }
 
@@ -458,19 +455,14 @@ Platinum Design-ın əsas ideyası vizuallığı gözəl və düşünülmüş et
             document.getElementById(`btn-${lang}`).classList.add('active');
         }
 
-        // 3. Обновление статичного текста (кнопки меню и футера)
         function updateInterfaceText() {
             const data = contentData[currentLang];
             ctaBtn.innerText = data.cta;
-            linkHome.innerText = data.menu_home;
             linkStore.innerText = data.menu_store;
         }
 
-        // 4. Эффект печатной машинки (для заголовка И текста)
         function startTypewriterEffect() {
             const data = contentData[currentLang];
-            
-            // Сброс предыдущих таймеров
             clearTimeout(headlineTimeout);
             clearTimeout(bodyTimeout);
             
@@ -478,16 +470,15 @@ Platinum Design-ın əsas ideyası vizuallığı gözəl və düşünülmüş et
             bodyEl.innerHTML = "";
             ctaBtn.classList.remove('visible');
 
-            // Печать заголовка
             let i = 0;
+            // Немного ускорим печать, так как текста стало больше
             function typeHeadline() {
                 if (i < data.headline.length) {
                     headlineEl.innerHTML += data.headline.charAt(i);
                     i++;
-                    headlineTimeout = setTimeout(typeHeadline, 40); // Скорость заголовка
+                    headlineTimeout = setTimeout(typeHeadline, 35);
                 } else {
-                    // Когда заголовок готов, начинаем текст
-                    setTimeout(() => startBodyTypewriter(data.body), 300);
+                    setTimeout(() => startBodyTypewriter(data.body), 200);
                 }
             }
             typeHeadline();
@@ -495,40 +486,37 @@ Platinum Design-ın əsas ideyası vizuallığı gözəl və düşünülmüş et
 
         function startBodyTypewriter(text) {
             let j = 0;
-            const speed = 10; // Скорость основного текста (быстрее)
-
+            // Очень быстрая печать для длинного текста
+            const speed = 5; 
             function typeBody() {
                 if (j < text.length) {
                     bodyEl.innerHTML += text.charAt(j);
                     j++;
-                    // Пропускаем задержку для пробелов, чтобы печатало ритмичнее
-                    let delay = (text.charAt(j) === ' ') ? 0 : speed;
+                    // Пропускаем задержку на пробелах и переносах для скорости
+                    let char = text.charAt(j);
+                    let delay = (char === ' ' || char === '\n') ? 0 : speed;
                     bodyTimeout = setTimeout(typeBody, delay);
                 } else {
-                    // Текст готов - показываем кнопку
                     ctaBtn.classList.add('visible');
                 }
             }
             typeBody();
         }
 
-        // 5. Управление Меню
-        // Нажимаем на бургер -> Он превращается в крестик (CSS) -> Открывается меню
-        // Нажимаем на тот же элемент (уже крестик) -> Меню закрывается
+        // Меню
         burger.addEventListener('click', () => {
             burger.classList.toggle('active');
             menuCurtain.classList.toggle('active');
         });
 
-        // Функция закрытия при клике на ссылку
-        function closeMenu() {
-            burger.classList.remove('active');
-            menuCurtain.classList.remove('active');
-        }
+        document.querySelectorAll('.menu-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                burger.classList.remove('active');
+                menuCurtain.classList.remove('active');
+            });
+        });
 
-        // Инициализация
         updateActiveMiniLang('ru');
-
     </script>
 </body>
 </html>
