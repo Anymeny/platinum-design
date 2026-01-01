@@ -96,7 +96,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 100px; /* Увеличили высоту хедера */
+            height: 100px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -109,7 +109,7 @@
         }
 
         .logo-container img {
-            height: 75px; /* УВЕЛИЧЕН ЛОГОТИП */
+            height: 75px;
             object-fit: contain;
             filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
             transition: transform 0.4s var(--ease-smooth);
@@ -122,7 +122,7 @@
         /* --- BURGER MENU (FIXED) --- */
         .burger-menu {
             position: fixed;
-            top: 38px; /* Отцентровано по новой высоте хедера (100-24)/2 */
+            top: 38px;
             right: 25px;
             width: 35px;
             height: 24px;
@@ -382,7 +382,7 @@
         <ul class="menu-links">
             <li><a href="https://t.me/PlatinumDsgn" target="_blank" id="link-store">Перейти в магазин</a></li>
             <li><a href="https://www.tiktok.com/@wirilgun1e1?_r=1&_t=ZS-92bJlTjGfQe" target="_blank">TikTok</a></li>
-            <li><a href="#" id="link-insta">Instagram</a></li>
+            <li><a href="https://www.instagram.com/platinum.design1?igsh=MTZwNmFqdzkyajRqcw%3D%3D&utm_source=qr" target="_blank" id="link-insta">Instagram</a></li>
         </ul>
     </div>
 
@@ -393,7 +393,7 @@
     </main>
 
     <script>
-        // --- ДАННЫЕ (Теперь с ПОЛНЫМ текстом) ---
+        // --- ДАННЫЕ (ПОЛНЫЙ ТЕКСТ) ---
         const contentData = {
             ru: {
                 headline: "Platinum Design — больше чем просто графика",
@@ -403,14 +403,12 @@
             },
             en: {
                 headline: "Platinum Design — More than just graphics",
-                // Полный перевод на английский
                 body: `Platinum Design is an online store where unique designs are created specifically for each person. There are no ready-made templates or random pictures here — every work is developed from scratch based on your ideas, wishes, and style. We ensure everything looks beautiful, neat, and modern, so that every element harmonizes with the others and creates a complete, visually pleasing image.\n\nIn our store, you can order designs of any complexity and theme. Regardless of whether you need a bright and catchy visual image or a calm and minimalist style, every work is done with attention to details: color, shape, composition, and general aesthetics. We try to make the design understandable and easy to perceive, so that it creates the right mood and impression.\n\nThe main idea of Platinum Design is to make the visual beautiful and thoughtful. There is nothing superfluous here, only neat, holistic, and modern work created especially for you. We take into account all wishes and features so that the result exactly meets your expectations and you can see exactly what you wanted.\n\nWe create a design that delights the eye, helps express ideas, and makes everything related to visual aesthetics neat, modern, and attractive.`,
                 cta: "Go to Store",
                 menu_store: "Go to Store"
             },
             az: {
                 headline: "Platinum Design — Qrafikadan daha artıq",
-                 // Полный перевод на азербайджанский
                 body: `Platinum Design — hər bir insan üçün xüsusi olaraq unikal dizayn yaradılan onlayn mağazadır. Burada hazır şablonlar və təsadüfi şəkillər yoxdur — hər bir iş sizin ideyalarınız, istəkləriniz və üslubunuza uyğun olaraq sıfırdan hazırlanır. Biz hər şeyin gözəl, səliqəli və müasir görünməsini təmin edirik ki, hər bir element digərləri ilə ahəngdar olsun və bütöv, göz oxşayan bir görüntü yaratsın.\n\nMağazamızda istənilən çətinlikdə və mövzuda dizayn sifariş edə bilərsiniz. İstər parlaq və diqqətçəkən vizual obraz, istərsə də sakit və minimalist üslub lazım olsun, hər bir iş detallara — rəngə, formaya, kompozisiyaya və ümumi estetikaya diqqət yetirilərək hazırlanır. Biz çalışırıq ki, dizayn anlaşılan və qavranılması asan olsun, lazımi əhval-ruhiyə və təəssürat yaratsın.\n\nPlatinum Design-ın əsas ideyası vizuallığı gözəl və düşünülmüş etməkdir. Burada artıq heç nə yoxdur, yalnız sizin üçün xüsusi olaraq yaradılmış səliqəli, bütöv və müasir iş var. Nəticənin gözləntilərinizə tam uyğun olması üçün bütün istəklərinizi və xüsusiyyətləri nəzərə alırıq ki, məhz istədiyinizi görə biləsiniz.\n\nBiz gözü oxşayan, ideyaları ifadə etməyə kömək edən və vizual estetika ilə bağlı hər şeyi səliqəli, müasir və cəlbedici edən dizayn yaradırıq.`,
                 cta: "Mağazaya keçid",
                 menu_store: "Mağazaya keçid"
@@ -471,7 +469,6 @@
             ctaBtn.classList.remove('visible');
 
             let i = 0;
-            // Немного ускорим печать, так как текста стало больше
             function typeHeadline() {
                 if (i < data.headline.length) {
                     headlineEl.innerHTML += data.headline.charAt(i);
@@ -486,13 +483,11 @@
 
         function startBodyTypewriter(text) {
             let j = 0;
-            // Очень быстрая печать для длинного текста
             const speed = 5; 
             function typeBody() {
                 if (j < text.length) {
                     bodyEl.innerHTML += text.charAt(j);
                     j++;
-                    // Пропускаем задержку на пробелах и переносах для скорости
                     let char = text.charAt(j);
                     let delay = (char === ' ' || char === '\n') ? 0 : speed;
                     bodyTimeout = setTimeout(typeBody, delay);
