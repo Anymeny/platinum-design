@@ -306,15 +306,17 @@
             display: inline-block;
             padding: 20px 55px;
             background: var(--accent-color);
-            color: #1c1b19;
-            font-weight: 700;
-            font-size: 1rem;
+            
+            /* ИЗМЕНЕНИЯ ЗДЕСЬ: */
+            color: #2b2210; /* Темно-коричневый вместо резкого черного для мягкости */
+            font-weight: 600; /* Полужирный вместо жирного для элегантности */
+            letter-spacing: 2px; /* Чуть больше воздуха */
+            
+            font-size: 0.95rem;
             border-radius: 50px;
-            /* Более мягкая тень изначально */
             box-shadow: 0 10px 30px -10px rgba(255, 170, 0, 0.5);
             transition: all 0.4s var(--ease-smooth);
             text-transform: uppercase;
-            letter-spacing: 1.5px;
             opacity: 0;
             transform: translateY(30px);
             border: none;
@@ -327,12 +329,10 @@
             transform: translateY(0);
         }
 
-        /* Плавный, не резкий ховер */
         .cta-button:hover {
             transform: translateY(-4px) scale(1.02);
-            /* Усиливаем тень и делаем кнопку чуть ярче, а не меняем цвет */
             box-shadow: 0 20px 40px -10px rgba(255, 170, 0, 0.7);
-            filter: brightness(1.1); 
+            filter: brightness(1.05); /* Легкое осветление при наведении */
         }
         
         .cta-button:active {
